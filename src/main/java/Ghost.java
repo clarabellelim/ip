@@ -79,18 +79,48 @@ public class Ghost {
                 continue;
             }
 
-            //add new tasks 
-            if (taskCount < tasks.length) {
-                tasks[taskCount] = new Task (input);
-                taskCount++;
+            if (input.startsWith("todo ")) {
+                String description = input.substring(5);
+                tasks[taskCount++] = new Todo(description);
                 System.out.println(line);
-                System.out.println(" New haunting item added: " + input);
+                System.out.println(" New haunting item added: ");
+                System.out.println("  " + tasks[taskCount -1]);
+                System.out.println(" Now you have " + taskCount + " thing(s) to haunt on your haunting list.");
                 System.out.println(line);
-            } else {
-                System.out.println(line);
-                System.out.println(" AHHHHHH: The haunting list is full.");
-                System.out.println(line);
+                continue;
             }
+
+            if (input.startsWith("deadline ")) {
+                String[] parts = input.substring(9).split(" /by ", 2);
+                String description = parts[0];
+                String by = parts[1];
+                tasks[taskCount++] = new Deadline(description, by);
+                System.out.println(line);
+                System.out.println(" New haunting item added: ");
+                System.out.println("  " + tasks[taskCount -1]);
+                System.out.println(" Now you have " + taskCount + " thing(s) to haunt on your haunting list.");
+                System.out.println(line);
+                continue;
+            }
+
+            if (input.startsWith("event ")) {
+                String[] parts = input.substring(6).split(" /from ", 2);
+                String description = parts[0];
+                String[] times = parts[1].split(" /to ", 2);
+                String from = times[0];
+                String to = times[1];
+                tasks[taskCount++] = new Event(description, from, to);
+                System.out.println(line);
+                System.out.println(" New haunting item added: ");
+                System.out.println("  " + tasks[taskCount -1]);
+                System.out.println(" Now you have " + taskCount + " thing(s) to haunt on your haunting list.");
+                System.out.println(line);
+                continue;
+            }
+
+            System.out.println(line);
+            System.out.println(" AHHHHHH: Command not recognised.");
+            System.out.println(line);
 
         }
 
