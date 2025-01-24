@@ -15,7 +15,7 @@ public class Ghost {
         String line = "____________________________________________________________";
 
         // list of tasks
-        String[] tasks = new String[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
 
         System.out.println("BOO! Hello I am\n" + logo + "\nHow may I haunt you?");
@@ -45,18 +45,53 @@ public class Ghost {
                 continue;
             }
 
+            //mark task as done
+            if (input.startsWith("mark ")) {
+                int taskNumber = Integer.parseInt(input.substring(5)) -1 ;
+                if (taskNumber >= 0 && taskNumber < taskCount) {
+                    tasks[taskNumber].markAsDone();
+                    System.out.println(line);
+                    System.out.println(" BOO! I've marked this task as haunted:");
+                    System.out.println("  " + tasks[taskNumber]);
+                    System.out.println(line);
+                } else {
+                    System.out.println(line);
+                    System.out.println(" AHHHHHH: Task number is out of haunting range.");
+                    System.out.println(line);
+                }
+                continue;
+            }
+
+            //unmark
+            if (input.startsWith("unmark ")) {
+                int taskNumber = Integer.parseInt(input.substring(7)) -1 ;
+                if (taskNumber >= 0 && taskNumber < taskCount) {
+                    tasks[taskNumber].unmark();
+                    System.out.println(line);
+                    System.out.println(" BOO! I've unmarked this task for haunting:");
+                    System.out.println("  " + tasks[taskNumber]);
+                    System.out.println(line);
+                } else {
+                    System.out.println(line);
+                    System.out.println(" AHHHHHH: Task number is out of haunting range.");
+                    System.out.println(line);
+                }
+                continue;
+            }
+
             //add new tasks 
             if (taskCount < tasks.length) {
-                tasks[taskCount] = input;
+                tasks[taskCount] = new Task (input);
                 taskCount++;
                 System.out.println(line);
                 System.out.println(" New haunting item added: " + input);
                 System.out.println(line);
             } else {
                 System.out.println(line);
-                System.out.println(" Error: The haunting list is full.");
+                System.out.println(" AHHHHHH: The haunting list is full.");
                 System.out.println(line);
             }
+
         }
 
         scanner.close();
