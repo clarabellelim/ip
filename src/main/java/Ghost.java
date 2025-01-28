@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Ghost {
@@ -24,9 +25,8 @@ public class Ghost {
 
         String line = "____________________________________________________________";
 
-        // list of tasks
-        Task[] tasks = new Task[100];
-        int taskCount = 0;
+        // Array list of tasks
+        ArrayList<Task> tasks = new ArrayList<>();
 
         System.out.println("BOO! Hello I am\n" + logo + "\nHow may I haunt you?");
         System.out.println(line);
@@ -37,7 +37,7 @@ public class Ghost {
             try{ 
                 String input = scanner.nextLine();
 
-                // exit statement
+                //exit statement
                 if (input.equalsIgnoreCase("bye")) {
                     System.out.println(line);
                     System.out.println(byebye + "\nI will always be haunting you...");
@@ -49,25 +49,34 @@ public class Ghost {
                 if (input.equalsIgnoreCase("list")) {
                     System.out.println(line);
                     System.out.println(" BOO! Here's your list of things to HAUNT:\n");
-                    for (int i = 0; i < taskCount; i++) {
-                        System.out.println("  " + (i + 1) + ". " + tasks[i]);
+                    for (int i = 0; i < tasks.size(); i++) {
+                        System.out.println("  " + (i + 1) + ". " + tasks.get(i));
                     }
+                    System.out.println("\n MUAHAHAHAHAHA");
                     System.out.println(line);
                     continue;
                 }
 
+                //delete task
+                if (input.startsWith("delete ")) {
+                    deleteTask(input, tasks);
+                    continue;
+                }
+
+
                 //mark task as done
                 if (input.startsWith("mark ")) {
-                    mark(input, tasks, taskCount);
+                    mark(input, tasks);
                     continue;
                 }
 
                 //unmark
                 if (input.startsWith("unmark ")) {
-                    unmark(input, tasks, taskCount);
+                    unmark(input, tasks);
                     continue;
                 }
 
+                //todo
                 if (input.startsWith("todo ")) {
                     String description = input.substring(5);
 
@@ -75,15 +84,16 @@ public class Ghost {
                         throw new GhostException(" AHHHHHH: There's nothing to haunt! Please include a scary description.");
                     }
 
-                    tasks[taskCount++] = new Todo(description);
+                    tasks.add(new Todo(description));
                     System.out.println(line);
-                    System.out.println(" New haunting item added: ");
-                    System.out.println("  " + tasks[taskCount -1]);
-                    System.out.println(" Now you have " + taskCount + " thing(s) to haunt on your haunting list.");
+                    System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
+                    System.out.println("  " + tasks.get(tasks.size() - 1));
+                    System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
                     System.out.println(line);
                     continue;
                 }
 
+                //deadline
                 if (input.startsWith("deadline ")) {
                     String[] parts = input.substring(9).split(" /by ", 2);
 
@@ -93,11 +103,11 @@ public class Ghost {
 
                     String description = parts[0];
                     String by = parts[1];
-                    tasks[taskCount++] = new Deadline(description, by);
+                    tasks.add(new Deadline(description, by));
                     System.out.println(line);
-                    System.out.println(" New haunting item added: ");
-                    System.out.println("  " + tasks[taskCount -1]);
-                    System.out.println(" Now you have " + taskCount + " thing(s) to haunt on your haunting list.");
+                    System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
+                    System.out.println("  " + tasks.get(tasks.size() -1));
+                    System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
                     System.out.println(line);
                     continue;
                 }
@@ -118,11 +128,11 @@ public class Ghost {
 
                     String from = times[0];
                     String to = times[1];
-                    tasks[taskCount++] = new Event(description, from, to);
+                    tasks.add(new Event(description, from, to));
                     System.out.println(line);
-                    System.out.println(" New haunting item added: ");
-                    System.out.println("  " + tasks[taskCount -1]);
-                    System.out.println(" Now you have " + taskCount + " thing(s) to haunt on your haunting list.");
+                    System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
+                    System.out.println("  " + tasks.get(tasks.size() - 1));
+                    System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
                     System.out.println(line);
                     continue;
                 }
@@ -140,36 +150,60 @@ public class Ghost {
 
     }
 
-    private static void mark(String input, Task[] tasks, int taskCount) throws GhostException {
+
+    //delete
+    private static void deleteTask(String input, ArrayList<Task> tasks) throws GhostException {
         String line = "____________________________________________________________";
 
         try {
-            int taskNumber = Integer.parseInt(input.substring(5)) - 1;
-            if (taskNumber < 0 || taskNumber >= taskCount) {
+            int taskNumber = Integer.parseInt(input.substring(7)) - 1;
+            if (taskNumber < 0 || taskNumber >= tasks.size()) {
                 throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
             }
-            tasks[taskNumber].markAsDone();
+            Task removedTask = tasks.remove(taskNumber);
             System.out.println(line);
-            System.out.println(" BOO! I've marked this task as haunted:");
-            System.out.println("   " + tasks[taskNumber]);
+            System.out.println(" BOO! I've removed this haunting item:");
+            System.out.println("   " + removedTask);
+            System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
             System.out.println(line);
         } catch (NumberFormatException e) {
             throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
         }
     }
 
-    private static void unmark(String input, Task[] tasks, int taskCount) throws GhostException {
+
+    //mark
+    private static void mark(String input, ArrayList<Task> tasks) throws GhostException {
+        String line = "____________________________________________________________";
+
+        try {
+            int taskNumber = Integer.parseInt(input.substring(5)) - 1;
+            if (taskNumber < 0 || taskNumber >= tasks.size()) {
+                throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
+            }
+            tasks.get(taskNumber).markAsDone();
+            System.out.println(line);
+            System.out.println(" BOO! I've marked this task as haunted:");
+            System.out.println("   " + tasks.get(taskNumber));
+            System.out.println(line);
+        } catch (NumberFormatException e) {
+            throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
+        }
+    }
+
+    //unmark
+    private static void unmark(String input, ArrayList<Task> tasks) throws GhostException {
         String line = "____________________________________________________________";
 
         try {
             int taskNumber = Integer.parseInt(input.substring(7)) - 1;
-            if (taskNumber < 0 || taskNumber >= taskCount) {
+            if (taskNumber < 0 || taskNumber >= tasks.size()) {
                 throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
             }
-            tasks[taskNumber].unmark();
+            tasks.get(taskNumber).unmark();
             System.out.println(line);
             System.out.println(" BOO! I've unmarked this task for haunting:");
-            System.out.println("   " + tasks[taskNumber]);
+            System.out.println("   " + tasks.get(taskNumber));
             System.out.println(line);
         } catch (NumberFormatException e) {
             throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
