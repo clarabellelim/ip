@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+enum TaskType {
+    TODO, DEADLINE, EVENT
+}
+
 public class Ghost {
     public static void main(String[] args) {
         String logo = "             ('-. .-.               .-')    .-') _    \n"
@@ -76,68 +80,13 @@ public class Ghost {
                     continue;
                 }
 
-                //todo
-                if (input.startsWith("todo ")) {
-                    String description = input.substring(5);
-
-                    if (description.isEmpty()) {
-                        throw new GhostException(" AHHHHHH: There's nothing to haunt! Please include a scary description.");
-                    }
-
-                    tasks.add(new Todo(description));
-                    System.out.println(line);
-                    System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
-                    System.out.println("  " + tasks.get(tasks.size() - 1));
-                    System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
-                    System.out.println(line);
+                // todo / deadling / event
+                if (input.startsWith("todo ") || input.startsWith("deadline ") || input.startsWith("event ")) {
+                    addTask(input, tasks);
                     continue;
                 }
 
-                //deadline
-                if (input.startsWith("deadline ")) {
-                    String[] parts = input.substring(9).split(" /by ", 2);
-
-                    if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
-                        throw new GhostException(" AHHHHHH: Please use the following haunting format: 'deadline <scary description> /by <deadline>'.");
-                    }
-
-                    String description = parts[0];
-                    String by = parts[1];
-                    tasks.add(new Deadline(description, by));
-                    System.out.println(line);
-                    System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
-                    System.out.println("  " + tasks.get(tasks.size() -1));
-                    System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
-                    System.out.println(line);
-                    continue;
-                }
-
-                if (input.startsWith("event ")) {
-                    String[] parts = input.substring(6).split(" /from ", 2);
-                    
-                    if (parts.length < 2) {
-                        throw new GhostException(" AHHHHHH: Please use the following haunting format: 'event <scary description> /from <start> /to <end>'.");
-                    }
-
-                    String description = parts[0];
-                    String[] times = parts[1].split(" /to ", 2);
-
-                    if (times.length < 2 || description.isEmpty() || times[0].trim().isEmpty() || times[1].trim().isEmpty()) {
-                        throw new GhostException(" AHHHHHH: Please use the following haunting format: 'event <scary description> /from <start> /to <end>'.");
-                    }
-
-                    String from = times[0];
-                    String to = times[1];
-                    tasks.add(new Event(description, from, to));
-                    System.out.println(line);
-                    System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
-                    System.out.println("  " + tasks.get(tasks.size() - 1));
-                    System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
-                    System.out.println(line);
-                    continue;
-                }
-
-                    throw new GhostException(" AHHHHHH: The description is too scary, I can't understand it! Please try again!");
+                throw new GhostException(" AHHHHHH: The description is too scary, I can't understand it! Please try again!");
                 } catch (GhostException e) {
                     System.out.println(line);
                     System.out.println(e.getMessage());
@@ -150,6 +99,60 @@ public class Ghost {
 
     }
 
+    private static void addTask(String input, ArrayList<Task> tasks) throws GhostException {
+        String line = "____________________________________________________________";
+        String description;
+
+        if (input.startsWith("todo ")) {
+            description = input.substring(5).trim();
+            
+            if (description.isEmpty()) {
+            throw new GhostException(" AHHHHHH: There's nothing to haunt! Please include a scary description.");
+        }
+
+        tasks.add(new Todo(description));
+        System.out.println(line);
+        System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
+        System.out.println("  " + tasks.get(tasks.size() - 1));
+        System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
+        System.out.println(line);
+
+    } else if (input.startsWith("deadline ")) {
+        String[] parts = input.substring(9).split(" /by ", 2);
+
+        if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
+            throw new GhostException(" AHHHHHH: Please use the following haunting format: 'deadline <scary description> /by <deadline>'.");
+        }
+
+        tasks.add(new Deadline(parts[0].trim(), parts[1].trim()));
+        System.out.println(line);
+        System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
+        System.out.println("  " + tasks.get(tasks.size() -1));
+        System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
+        System.out.println(line);
+
+    } else if (input.startsWith("event ")) {
+        String[] parts = input.substring(6).split(" /from ", 2);
+        
+        if (parts.length < 2) {
+            throw new GhostException(" AHHHHHH: Please use the following haunting format: 'event <scary description> /from <start> /to <end>'.");
+        }
+
+        String[] times = parts[1].split(" /to ", 2);
+
+        if (times.length < 2 || parts[0].trim().isEmpty() || times[0].trim().isEmpty() || times[1].trim().isEmpty()) {
+            throw new GhostException(" AHHHHHH: Please use the following haunting format: 'event <scary description> /from <start> /to <end>'.");
+        }
+
+        tasks.add(new Event(parts[0].trim(), times[0].trim(), times[1].trim()));
+        System.out.println(line);
+        System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
+        System.out.println("  " + tasks.get(tasks.size() - 1));
+        System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
+        System.out.println(line);
+    }
+
+}
 
     //delete
     private static void deleteTask(String input, ArrayList<Task> tasks) throws GhostException {
@@ -170,7 +173,6 @@ public class Ghost {
             throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
         }
     }
-
 
     //mark
     private static void mark(String input, ArrayList<Task> tasks) throws GhostException {

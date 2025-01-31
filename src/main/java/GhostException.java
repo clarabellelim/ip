@@ -3,5 +3,3 @@ public class GhostException extends Exception {
         super(message);
     }
 }
-
-
