@@ -6,11 +6,15 @@ public class Storage {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
         if (!file.exists()) return tasks;
-
+    
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                tasks.add(Task.parseTask(line));
+                try {
+                    tasks.add(Task.parseTask(line));
+                } catch (GhostException e) {
+                    System.out.println("Error parsing task: " + e.getMessage());
+                }
             }
         } catch (IOException e) {
             System.out.println("Error loading tasks: " + e.getMessage());
