@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -81,6 +84,12 @@ public class Ghost {
                     continue;
                 }
 
+                // find
+                if (input.startsWith("find ")) {
+                    findTasksByDate(input, tasks);
+                    continue;
+                }
+
                 // todo / deadling / event
                 if (input.startsWith("todo ") || input.startsWith("deadline ") || input.startsWith("event ")) {
                     addTask(input, tasks);
@@ -100,7 +109,26 @@ public class Ghost {
 
     }
 
-  
+    private static void findTasksByDate(String input, ArrayList<Task> tasks) {
+        String line = "____________________________________________________________";
+        String dateStr = input.substring(5).trim();
+        try {
+            LocalDate date = LocalDate.parse(dateStr);
+            System.out.println(line);
+            System.out.println("BOO! Here are the haunted tasks on " + date.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ":");
+            for (Task task : tasks) {
+                if (task instanceof Deadline && ((Deadline) task).getDate().equals(date)) {
+                    System.out.println("  " + task);
+                } else if (task instanceof Event && ((Event) task).getFrom().toLocalDate().equals(date)) {
+                    System.out.println("  " + task);
+                }
+            }
+            System.out.println(line);
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format! Use yyyy-MM-dd.");
+        }
+    }
+
     private static void addTask(String input, ArrayList<Task> tasks) throws GhostException {
         String line = "____________________________________________________________";
         String description;
