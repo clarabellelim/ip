@@ -23,4 +23,18 @@ public class Task {
     public String toString() {
         return "[" + getStatusIcon() + "] " + description;
     }
+
+    public String toFileString() {
+        return "T | " + (isDone ? "1" : "0") + " | " + description;
+    }
+
+    public static Task parseTask(String line) {
+        String[] parts = line.split(" \\| ");
+        return switch (parts[0]) {
+            case "T" -> new Todo(parts[2]);
+            case "D" -> new Deadline(parts[2], parts[3]);
+            case "E" -> new Event(parts[2], parts[3], parts[4]);
+            default -> throw new IllegalArgumentException("Unknown task type.");
+        };
+    }
 }

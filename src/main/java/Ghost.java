@@ -6,6 +6,8 @@ enum TaskType {
 }
 
 public class Ghost {
+    private static final String FILE_PATH = "./data/ghost.txt";
+
     public static void main(String[] args) {
         String logo = "             ('-. .-.               .-')    .-') _    \n"
                 + "            ( OO )  /              ( OO ). (  OO) )   \n"
@@ -28,9 +30,8 @@ public class Ghost {
         + " `------'   `--'       `------''--'  \n";
 
         String line = "____________________________________________________________";
-
-        // Array list of tasks
-        ArrayList<Task> tasks = new ArrayList<>();
+ 
+        ArrayList<Task> tasks = Storage.loadTasks(FILE_PATH);
 
         System.out.println("BOO! Hello I am\n" + logo + "\nHow may I haunt you?");
         System.out.println(line);
@@ -99,6 +100,7 @@ public class Ghost {
 
     }
 
+  
     private static void addTask(String input, ArrayList<Task> tasks) throws GhostException {
         String line = "____________________________________________________________";
         String description;
@@ -109,13 +111,7 @@ public class Ghost {
             if (description.isEmpty()) {
             throw new GhostException(" AHHHHHH: There's nothing to haunt! Please include a scary description.");
         }
-
         tasks.add(new Todo(description));
-        System.out.println(line);
-        System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
-        System.out.println("  " + tasks.get(tasks.size() - 1));
-        System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
-        System.out.println(line);
 
     } else if (input.startsWith("deadline ")) {
         String[] parts = input.substring(9).split(" /by ", 2);
@@ -123,13 +119,7 @@ public class Ghost {
         if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
             throw new GhostException(" AHHHHHH: Please use the following haunting format: 'deadline <scary description> /by <deadline>'.");
         }
-
         tasks.add(new Deadline(parts[0].trim(), parts[1].trim()));
-        System.out.println(line);
-        System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
-        System.out.println("  " + tasks.get(tasks.size() -1));
-        System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
-        System.out.println(line);
 
     } else if (input.startsWith("event ")) {
         String[] parts = input.substring(6).split(" /from ", 2);
@@ -143,14 +133,16 @@ public class Ghost {
         if (times.length < 2 || parts[0].trim().isEmpty() || times[0].trim().isEmpty() || times[1].trim().isEmpty()) {
             throw new GhostException(" AHHHHHH: Please use the following haunting format: 'event <scary description> /from <start> /to <end>'.");
         }
-
         tasks.add(new Event(parts[0].trim(), times[0].trim(), times[1].trim()));
-        System.out.println(line);
-        System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
-        System.out.println("  " + tasks.get(tasks.size() - 1));
-        System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
-        System.out.println(line);
+       
     }
+
+    Storage.saveTasks(tasks, FILE_PATH);
+    System.out.println(line);
+    System.out.println(" New haunting item added. MUAHAHAHAHAHA: ");
+    System.out.println("  " + tasks.get(tasks.size() - 1));
+    System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
+    System.out.println(line);
 
 }
 
@@ -164,6 +156,7 @@ public class Ghost {
                 throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
             }
             Task removedTask = tasks.remove(taskNumber);
+            Storage.saveTasks(tasks, FILE_PATH);
             System.out.println(line);
             System.out.println(" BOO! I've removed this haunting item:");
             System.out.println("   " + removedTask);
@@ -184,6 +177,7 @@ public class Ghost {
                 throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
             }
             tasks.get(taskNumber).markAsDone();
+            Storage.saveTasks(tasks, FILE_PATH);
             System.out.println(line);
             System.out.println(" BOO! I've marked this task as haunted:");
             System.out.println("   " + tasks.get(taskNumber));
@@ -203,6 +197,7 @@ public class Ghost {
                 throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
             }
             tasks.get(taskNumber).unmark();
+            Storage.saveTasks(tasks, FILE_PATH);
             System.out.println(line);
             System.out.println(" BOO! I've unmarked this task for haunting:");
             System.out.println("   " + tasks.get(taskNumber));
