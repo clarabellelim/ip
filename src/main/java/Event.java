@@ -23,6 +23,10 @@ public class Event extends Task {
         return from;
     }
 
+    public LocalDateTime getTo() {
+        return to;
+    }
+
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from.format(OUTPUT_FORMAT)

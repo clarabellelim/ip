@@ -2,37 +2,37 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Storage {
-    public static ArrayList<Task> loadTasks(String filePath) {
+    private String filePath;
+
+    public Storage(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public ArrayList<Task> loadTasks() throws GhostException {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
-        if (!file.exists()) return tasks;
-    
+        if (!file.exists()) {
+            return tasks;
+        }
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                try {
-                    tasks.add(Task.parseTask(line));
-                } catch (GhostException e) {
-                    System.out.println("Error parsing task: " + e.getMessage());
-                }
+                tasks.add(Task.fromString(line));
             }
         } catch (IOException e) {
-            System.out.println("Error loading tasks: " + e.getMessage());
+            throw new GhostException("Failed to read haunting tasks.");
         }
         return tasks;
     }
 
-    public static void saveTasks(ArrayList<Task> tasks, String filePath) {
-        File file = new File(filePath);
-        file.getParentFile().mkdirs();
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+    public void saveTasks(ArrayList<Task> tasks) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Task task : tasks) {
-                writer.write(task.toFileString());
+                writer.write(task.toString());
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Error saving tasks: " + e.getMessage());
+            System.out.println("Failed to save haunting tasks.");
         }
     }
 }

@@ -1,40 +1,54 @@
-public class Task {
+public abstract class Task {
     protected String description;
     protected boolean isDone;
 
     public Task(String description) {
         this.description = description;
-        this.isDone = false;
+        this.isDone = false; // Default to not done
     }
 
-    public String getStatusIcon() {
-        return (isDone ? "X" : " "); // mark done task with X
+    public abstract String toFileString();
+
+    public static Task fromString(String taskString) throws GhostException {
+        String[] parts = taskString.split(" \\| ");
+        
+        switch (parts[0]) {
+            case "T":
+                return new Todo(parts[2]); // Todo task
+            case "D":
+                return new Deadline(parts[2], parts[3]); // Todo task
+            case "E":
+                return new Event(parts[2], parts[3], parts[4]); // Event task, expect description, from date/time, and to date/time
+            default:
+                throw new GhostException("AHHHHHHHHH: Unknown type of haunting task: " + parts[0]);
+        }
     }
+    
 
     public void markAsDone() {
         this.isDone = true;
     }
 
+    public void markAsNotDone() {
+        this.isDone = false;
+    }    
+
     public void unmark() {
         this.isDone = false;
     }
 
-    @Override 
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public String getStatusIcon() {
+        return (isDone ? "[X]" : "[ ]"); // [X] for done, [ ] for not done
+    }
+
+    @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
-    }
-
-    public String toFileString() {
-        return "T | " + (isDone ? "1" : "0") + " | " + description;
-    }
-
-    public static Task parseTask(String line) throws GhostException {
-        String[] parts = line.split(" \\| ");
-        return switch (parts[0]) {
-            case "T" -> new Todo(parts[2]);
-            case "D" -> new Deadline(parts[2], parts[3]);
-            case "E" -> new Event(parts[2], parts[3], parts[4]);
-            default -> throw new GhostException("Unknown task type.");
-        };
+        return getStatusIcon() + " " + description;
     }
 }
+
+    
