@@ -1,3 +1,9 @@
+package ghost.command;
+import ghost.exception.GhostException;
+import ghost.storage.Storage;
+import ghost.task.TaskList;
+import ghost.ui.Ui;
+
 public class MarkCommand extends Command {
     private final int taskIndex;
 

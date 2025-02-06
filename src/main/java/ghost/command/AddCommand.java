@@ -1,3 +1,10 @@
+import Task;
+import ghost.exception.GhostException;
+import ghost.storage.Storage;
+import ghost.task.TaskList;
+import ghost.ui.Ui;
+
+package ghost.command;
 public class AddCommand extends Command {
     private final String input;
 

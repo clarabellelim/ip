@@ -1,5 +1,9 @@
+package ghost.storage;
 import java.io.*;
 import java.util.ArrayList;
+
+import Task;
+import ghost.exception.GhostException;
 
 public class Storage {
     private String filePath;

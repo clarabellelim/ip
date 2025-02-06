@@ -1,3 +1,5 @@
+import ghost.exception.GhostException;
+
 public abstract class Task {
     protected String description;
     protected boolean isDone;

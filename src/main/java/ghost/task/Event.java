@@ -1,3 +1,4 @@
+import ghost.exception.GhostException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;

@@ -1,3 +1,10 @@
+package ghost.command;
+import Task;
+import ghost.exception.GhostException;
+import ghost.storage.Storage;
+import ghost.task.TaskList;
+import ghost.ui.Ui;
+
 public class DeleteCommand extends Command {
     private final int taskIndex;
 
