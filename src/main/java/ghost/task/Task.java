@@ -1,3 +1,5 @@
+package ghost.task; 
+
 import ghost.exception.GhostException;
 
 public abstract class Task {

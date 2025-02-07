@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+package ghost;
 
 import ghost.command.Command;
 import ghost.exception.GhostException;
@@ -6,6 +6,8 @@ import ghost.parser.Parser;
 import ghost.storage.Storage;
 import ghost.task.TaskList;
 import ghost.ui.Ui;
+
+import java.util.ArrayList;
 
 public class Ghost {
     private Storage storage;

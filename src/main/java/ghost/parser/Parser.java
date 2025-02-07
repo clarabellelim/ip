@@ -1,15 +1,7 @@
-import ghost.command.AddCommand;
-import ghost.command.Command;
-import ghost.command.DeleteCommand;
-import ghost.command.ExitCommand;
-import ghost.command.FindByDateCommand;
-import ghost.command.ListCommand;
-import ghost.command.MarkCommand;
-import ghost.command.UnmarkCommand;
+package ghost.parser;
+
+import ghost.command.*;
 import ghost.exception.GhostException;
-import ghost.storage.Storage;
-import ghost.task.TaskList;
-import ghost.ui.Ui;
 
 public class Parser {
     private final TaskList tasks;

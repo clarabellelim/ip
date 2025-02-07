@@ -1,3 +1,5 @@
+package ghost.task;
+
 import ghost.exception.GhostException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

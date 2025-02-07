@@ -1,4 +1,5 @@
 package ghost.command;
+
 import ghost.exception.GhostException;
 import ghost.storage.Storage;
 import ghost.task.TaskList;

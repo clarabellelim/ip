@@ -1,8 +1,7 @@
 package ghost.ui;
-import java.util.Scanner;
-import java.time.LocalDate;
-import java.util.ArrayList;
 
+import ghost.task.Task;
+import java.util.ArrayList;
 
 public class Ui {
     private final Scanner scanner;
