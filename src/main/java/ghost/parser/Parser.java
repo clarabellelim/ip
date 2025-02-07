@@ -2,6 +2,9 @@ package ghost.parser;
 
 import ghost.command.*;
 import ghost.exception.GhostException;
+import ghost.storage.Storage;
+import ghost.task.TaskList;
+import ghost.ui.Ui;
 
 public class Parser {
     private final TaskList tasks;

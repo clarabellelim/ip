@@ -5,6 +5,7 @@ import ghost.exception.GhostException;
 import ghost.parser.Parser;
 import ghost.storage.Storage;
 import ghost.task.TaskList;
+import ghost.task.Task;
 import ghost.ui.Ui;
 
 import java.util.ArrayList;
