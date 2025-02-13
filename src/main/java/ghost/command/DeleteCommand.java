@@ -15,14 +15,17 @@ public class DeleteCommand extends Command {
 
     @Override
     public boolean execute(TaskList tasks, Ui ui, Storage storage) throws GhostException {
-        if (taskIndex < 0 || taskIndex >= tasks.size()) {
-            throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
+        // Adjusting the index to 0-based (assuming user provides 1-based index)
+        int adjustedIndex = taskIndex - 1;
+
+        if (adjustedIndex < 0 || adjustedIndex >= tasks.size()) {
+            throw new GhostException("AHHHHHHH: Task number is out of haunting range.");
         }
-        Task deleteTask = tasks.deleteTask(taskIndex);
-        storage.saveTasks(tasks.getTasks()); 
+
+        Task deleteTask = tasks.deleteTask(adjustedIndex);
+        storage.saveTasks(tasks.getTasks());
         ui.showDeleteMessage(deleteTask, tasks.size());
-    
+
         return false;
     }
-    
 }

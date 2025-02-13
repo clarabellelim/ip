@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-
 public class Event extends Task {
     private final LocalDateTime from;
     private final LocalDateTime to;
@@ -38,6 +37,6 @@ public class Event extends Task {
 
     @Override
     public String toFileString() {
-        return "E | " + (isDone ? "1" : "0") + " | " + description + " | " + from + " | " + to;
+        return "Event " + description + " /from " + from.format(INPUT_FORMAT) + " /to " + to.format(INPUT_FORMAT);
     }
 }

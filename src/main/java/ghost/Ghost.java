@@ -23,7 +23,7 @@ public class Ghost {
             tasks = new TaskList(tasksList, storage, ui);
         } catch (GhostException e) {
             ui.showLoadingError();
-            tasks = new TaskList(new ArrayList<Task>(), storage, ui);
+            tasks = new TaskList(new ArrayList<>(), storage, ui);
         }
     }
 

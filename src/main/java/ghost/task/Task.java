@@ -1,6 +1,7 @@
-package ghost.task; 
+package ghost.task;
 
 import ghost.exception.GhostException;
+import java.time.LocalDate;
 
 public abstract class Task {
     protected String description;
@@ -14,20 +15,30 @@ public abstract class Task {
     public abstract String toFileString();
 
     public static Task fromString(String taskString) throws GhostException {
-        String[] parts = taskString.split(" \\| ");
-        
-        switch (parts[0]) {
-            case "T":
-                return new Todo(parts[2]); // Todo task
-            case "D":
-                return new Deadline(parts[2], parts[3]); // Todo task
-            case "E":
-                return new Event(parts[2], parts[3], parts[4]); // Event task, expect description, from date/time, and to date/time
-            default:
-                throw new GhostException("AHHHHHHHHH: Unknown type of haunting task: " + parts[0]);
+        System.out.println("Parsing task: " + taskString); // Debugging
+
+        if (taskString.startsWith("[T]")) {
+            return new Todo(taskString.substring(6)); // Skip "[T][ ] "
+        } else if (taskString.startsWith("[D]")) {
+            String[] parts = taskString.substring(6).split(" \\(by: ", 2);
+            if (parts.length < 2) {
+                throw new GhostException("Invalid Deadline format: " + taskString);
+            }
+            return new Deadline(parts[0], parts[1].replace(")", ""));
+        } else if (taskString.startsWith("[E]")) {
+            String[] parts = taskString.substring(6).split(" \\(from: ", 2);
+            if (parts.length < 2) {
+                throw new GhostException("Invalid Event format: " + taskString);
+            }
+            String[] timeParts = parts[1].split(" to: ", 2);
+            if (timeParts.length < 2) {
+                throw new GhostException("Invalid Event format: " + taskString);
+            }
+            return new Event(parts[0], timeParts[0], timeParts[1].replace(")", ""));
+        } else {
+            throw new GhostException("AHHHHHHHHH: Unknown type of haunting task: " + taskString);
         }
     }
-    
 
     public void markAsDone() {
         this.isDone = true;
@@ -35,7 +46,7 @@ public abstract class Task {
 
     public void markAsNotDone() {
         this.isDone = false;
-    }    
+    }
 
     public void unmark() {
         this.isDone = false;
@@ -54,5 +65,6 @@ public abstract class Task {
         return getStatusIcon() + " " + description;
     }
 }
+
 
     

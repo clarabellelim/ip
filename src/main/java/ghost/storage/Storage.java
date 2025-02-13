@@ -26,6 +26,7 @@ public class Storage {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
+                System.out.println("Loading task: " + line);  // Debugging line
                 tasks.add(Task.fromString(line));
             }
         } catch (IOException e) {
@@ -33,6 +34,7 @@ public class Storage {
         }
         return tasks;
     }
+
 
     public void saveTasks(ArrayList<Task> tasks) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {

@@ -61,6 +61,13 @@ public class TaskList {
         ui.printLine();
     }
 
+    public Task get(int index) throws GhostException {
+        if (index < 0 || index >= tasks.size()) {
+            throw new GhostException("Invalid task index.");
+        }
+        return tasks.get(index);
+    }
+
     public void addTask(Task task) {
         tasks.add(task);
         storage.saveTasks(tasks);
