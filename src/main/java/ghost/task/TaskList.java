@@ -7,25 +7,48 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+ * Manages a list of tasks, providing methods to add, delete, retrieve, and display tasks.
+ */
 public class TaskList {
     private final ArrayList<Task> tasks;
     private final Ui ui;
     private final Storage storage;
 
+    /**
+     * Constructs a TaskList with an initial list of tasks, storage, and UI components.
+     *
+     * @param tasks   The list of existing tasks.
+     * @param storage The storage handler for saving tasks.
+     * @param ui      The UI handler for displaying messages.
+     */
     public TaskList(ArrayList<Task> tasks, Storage storage, Ui ui) {
         this.tasks = tasks;
         this.ui = ui;
         this.storage = storage;
     }
 
+    /**
+     * Returns the list of tasks.
+     *
+     * @return An ArrayList containing the tasks.
+     */
     public ArrayList<Task> getTasks() {
         return tasks;
     }
 
+    /**
+     * Returns the number of tasks in the list.
+     *
+     * @return The number of tasks.
+     */
     public int size() {
         return tasks.size();
-    }    
+    }
 
+    /**
+     * Prints the list of tasks to the user.
+     */
     public void listTasks() {
         ui.printLine();
         if (tasks.isEmpty()) {
@@ -39,6 +62,11 @@ public class TaskList {
         ui.printLine();
     }
 
+    /**
+     * Finds and displays tasks that occur on a given date.
+     *
+     * @param date The date to filter tasks.
+     */
     public void findTasksByDate(LocalDate date) {
         ui.printLine();
         System.out.println("BOO! Here are the haunted tasks on " + date.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ":");
@@ -61,6 +89,13 @@ public class TaskList {
         ui.printLine();
     }
 
+    /**
+     * Retrieves a task by index.
+     *
+     * @param index The index of the task.
+     * @return The task at the specified index.
+     * @throws GhostException If the index is out of bounds.
+     */
     public Task get(int index) throws GhostException {
         if (index < 0 || index >= tasks.size()) {
             throw new GhostException("Invalid task index.");
@@ -68,6 +103,11 @@ public class TaskList {
         return tasks.get(index);
     }
 
+    /**
+     * Adds a task to the list and saves it.
+     *
+     * @param task The task to add.
+     */
     public void addTask(Task task) {
         tasks.add(task);
         storage.saveTasks(tasks);
@@ -78,6 +118,13 @@ public class TaskList {
         ui.printLine();
     }
 
+    /**
+     * Deletes a task from the list and saves the updated list.
+     *
+     * @param taskIndex The index of the task to delete.
+     * @return The deleted task.
+     * @throws GhostException If the index is out of bounds.
+     */
     public Task deleteTask(int taskIndex) throws GhostException {
         if (taskIndex < 0 || taskIndex >= tasks.size()) {
             throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
@@ -93,7 +140,14 @@ public class TaskList {
     
         return removedTask; // Return the removed task
     }
-    
+
+    /**
+     * Marks a task as done and saves the updated list.
+     *
+     * @param taskIndex The index of the task to mark.
+     * @return The marked task.
+     * @throws GhostException If the index is out of bounds.
+     */
     public Task markTask(int taskIndex) throws GhostException {
         if (taskIndex < 0 || taskIndex >= tasks.size()) {
             throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
@@ -109,7 +163,13 @@ public class TaskList {
     
         return task; // Return the marked task
     }
-    
+
+    /**
+     * Unmarks a task (sets it as not done) and saves the updated list.
+     *
+     * @param taskIndex The index of the task to unmark.
+     * @throws GhostException If the index is out of bounds.
+     */
     public void unmarkTask(int taskIndex) throws GhostException {
         if (taskIndex < 0 || taskIndex >= tasks.size()) {
             throw new GhostException(" AHHHHHH: Task number is out of haunting range.");

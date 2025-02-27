@@ -6,17 +6,33 @@ import ghost.storage.Storage;
 import ghost.task.TaskList;
 import ghost.ui.Ui;
 
+/**
+ * Handles parsing of user input and execution of commands.
+ */
 public class Parser {
     private final TaskList tasks;
     private final Ui ui;
     private final Storage storage;
 
+    /**
+     * Constructs a Parser with the necessary components.
+     *
+     * @param tasks The task list.
+     * @param ui The user interface.
+     * @param storage The storage handler.
+     */
     public Parser(TaskList tasks, Ui ui, Storage storage) {
         this.tasks = tasks;
         this.ui = ui;
         this.storage = storage;
     }
 
+    /**
+     * Processes user input and executes the corresponding command.
+     *
+     * @param input The user input string.
+     * @return True if the command is an exit command, false otherwise.
+     */
     public boolean handleCommand(String input) {
         try {
             Command command = parse(input);
@@ -28,6 +44,13 @@ public class Parser {
         return false;
     }
 
+    /**
+     * Parses user input and returns the corresponding Command.
+     *
+     * @param input The user input string.
+     * @return The parsed command.
+     * @throws GhostException If the command is invalid.
+     */
     public Command parse(String input) throws GhostException {
         String[] parts = input.split(" ", 2);
         String commandWord = parts[0].toLowerCase();
