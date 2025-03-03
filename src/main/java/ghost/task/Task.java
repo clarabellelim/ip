@@ -1,7 +1,6 @@
 package ghost.task;
 
 import ghost.exception.GhostException;
-import java.time.LocalDate;
 
 /**
  * Represents an abstract task with a description and completion status.

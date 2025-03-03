@@ -4,6 +4,7 @@ import ghost.exception.GhostException;
 import ghost.storage.Storage;
 import ghost.task.TaskList;
 import ghost.ui.Ui;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -37,7 +38,7 @@ public class FindByDateCommand extends Command {
      */
     @Override
     public boolean execute(TaskList tasks, Ui ui, Storage storage) {
-        ui.showTasksByDate(date, tasks.getTasks()); // Calls the new UI method
+        ui.showTasksByDate(date, tasks.getTasks());
         return false;
     }
 }
