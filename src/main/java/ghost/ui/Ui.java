@@ -145,6 +145,22 @@ public class Ui {
     }
 
     /**
+     * Displays the tasks that match the given search keyword.
+     *
+     * @param keyword The keyword used for searching tasks.
+     * @param matchingTasks The list of tasks that match the search keyword.
+     */
+    public void showFindMessage(String keyword, ArrayList<Task> matchingTasks) {
+        printLine();
+        System.out.println(" BOO! Here are the matching tasks in your haunting list:");
+        int index = 1;
+        for (Task task : matchingTasks) {
+            System.out.println(index++ + ". " + task);
+        }
+        printLine();
+    }
+
+    /**
      * Reads and returns the next user command.
      *
      * @return The user's command as a string.
