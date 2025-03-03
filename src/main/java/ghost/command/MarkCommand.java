@@ -22,7 +22,7 @@ public class MarkCommand extends Command {
 
         tasks.markTask(adjustedIndex);
         storage.saveTasks(tasks.getTasks());
-        ui.showMarkMessage(tasks.get(adjustedIndex)); // Fix: Use get() instead of getTask()
+        ui.showMarkMessage(tasks.get(adjustedIndex));
 
         return false;
     }

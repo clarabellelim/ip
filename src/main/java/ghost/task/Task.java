@@ -1,7 +1,6 @@
 package ghost.task;
 
 import ghost.exception.GhostException;
-import java.time.LocalDate;
 
 public abstract class Task {
     protected String description;

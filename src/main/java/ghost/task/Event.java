@@ -6,10 +6,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Event extends Task {
-    private final LocalDateTime from;
-    private final LocalDateTime to;
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+    private final LocalDateTime from;
+    private final LocalDateTime to;
 
     public Event(String description, String from, String to) throws GhostException {
         super(description);

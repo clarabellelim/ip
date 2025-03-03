@@ -20,9 +20,11 @@ public class Storage {
     public ArrayList<Task> loadTasks() throws GhostException {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
+
         if (!file.exists()) {
             return tasks;
         }
+
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -32,6 +34,7 @@ public class Storage {
         } catch (IOException e) {
             throw new GhostException("Failed to read haunting tasks.");
         }
+
         return tasks;
     }
 

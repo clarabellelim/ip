@@ -10,12 +10,11 @@ import java.util.Scanner;
 
 public class Ui {
     private final Scanner scanner;
+    private static final String LINE = "____________________________________________________________";
 
     public Ui() {
         scanner = new Scanner(System.in);
     }
-    
-    private static final String LINE = "____________________________________________________________";
 
     public void printLine() {
         System.out.println(LINE);
@@ -88,13 +87,13 @@ public class Ui {
         for (Task task : tasks) {
             if (task instanceof Deadline) {
                 Deadline deadline = (Deadline) task;
-                if (deadline.getDate().equals(date)) { // Deadline happens on the exact date
+                if (deadline.getDate().equals(date)) {
                     System.out.println("   " + task);
                 }
             } else if (task instanceof Event) {
                 Event event = (Event) task;
-                if (!event.getFrom().toLocalDate().isAfter(date) && !event.getTo().toLocalDate().isBefore(date)) { 
-                    // Event occurs if 'date' is between from and to
+                if (!event.getFrom().toLocalDate().isAfter(date)
+                        && !event.getTo().toLocalDate().isBefore(date)) {
                     System.out.println("   " + task);
                 }
             }

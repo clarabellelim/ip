@@ -6,9 +6,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Deadline extends Task {
-    private final LocalDate by;
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy/MM/dd");
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    private final LocalDate by;
 
     public Deadline(String description, String by) throws GhostException {
         super(description);

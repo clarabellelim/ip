@@ -1,6 +1,13 @@
 package ghost.parser;
 
-import ghost.command.*;
+import ghost.command.AddCommand;
+import ghost.command.Command;
+import ghost.command.DeleteCommand;
+import ghost.command.ExitCommand;
+import ghost.command.FindByDateCommand;
+import ghost.command.ListCommand;
+import ghost.command.MarkCommand;
+import ghost.command.UnmarkCommand;
 import ghost.exception.GhostException;
 import ghost.storage.Storage;
 import ghost.task.TaskList;
@@ -20,8 +27,7 @@ public class Parser {
     public boolean handleCommand(String input) {
         try {
             Command command = parse(input);
-            boolean isExit = command.execute(tasks, ui, storage);
-            return isExit;
+            return command.execute(tasks, ui, storage);
         } catch (GhostException e) {
             ui.showError(e.getMessage());
         }
@@ -31,44 +37,65 @@ public class Parser {
     public Command parse(String input) throws GhostException {
         String[] parts = input.split(" ", 2);
         String commandWord = parts[0].toLowerCase();
-    
-        return switch (commandWord) {
-            case "bye" -> new ExitCommand();
-            case "list" -> new ListCommand();
-            case "delete" -> {
-                if (parts.length < 2) throw new GhostException("AHHHHHH: Please specify a haunted task number to delete!");
-                try {
-                    int taskIndex = Integer.parseInt(parts[1].trim()) - 1;
-                    yield new DeleteCommand(taskIndex);
-                } catch (NumberFormatException e) {
-                    throw new GhostException("AHHHHHH: Haunted task number must be a valid integer!");
+
+        switch (commandWord) {
+            case "bye":
+                return new ExitCommand();
+            case "list":
+                return new ListCommand();
+            case "delete":
+                if (parts.length < 2) {
+                    throw new GhostException("AHHHHHH: Please specify a haunted task number to delete!");
                 }
-            }
-            case "mark" -> {
-                if (parts.length < 2) throw new GhostException("AHHHHHH: Please specify a haunted task number to mark!");
-                try {
-                    int taskIndex = Integer.parseInt(parts[1].trim()) - 1;
-                    yield new MarkCommand(taskIndex);
-                } catch (NumberFormatException e) {
-                    throw new GhostException("AHHHHHH: Haunted task number must be a valid integer!");
+                return createDeleteCommand(parts[1]);
+            case "mark":
+                if (parts.length < 2) {
+                    throw new GhostException("AHHHHHH: Please specify a haunted task number to mark!");
                 }
-            }
-            case "unmark" -> {
-                if (parts.length < 2) throw new GhostException("AHHHHHH: Please specify a haunted task number to unmark!");
-                try {
-                    int taskIndex = Integer.parseInt(parts[1].trim()) - 1;
-                    yield new UnmarkCommand(taskIndex);
-                } catch (NumberFormatException e) {
-                    throw new GhostException("AHHHHHH: Haunted task number must be a valid integer!");
+                return createMarkCommand(parts[1]);
+            case "unmark":
+                if (parts.length < 2) {
+                    throw new GhostException("AHHHHHH: Please specify a haunted task number to unmark!");
                 }
-            }
-            case "finddate" -> {
-                if (parts.length < 2) throw new GhostException("AHHHHHH: Please specify the haunting date in yyyy-MM-dd format.");
-                yield new FindByDateCommand(parts[1].trim());
-            }
-            case "todo", "deadline", "event" -> new AddCommand(input);
-            default -> throw new GhostException(" AHHHHHH: The description is too scary, I can't understand it!");
-        };
+                return createUnmarkCommand(parts[1]);
+            case "finddate":
+                if (parts.length < 2) {
+                    throw new GhostException("AHHHHHH: Please specify the haunting date in yyyy-MM-dd format.");
+                }
+                return new FindByDateCommand(parts[1].trim());
+            case "todo":
+            case "deadline":
+            case "event":
+                return new AddCommand(input);
+            default:
+                throw new GhostException("AHHHHHH: The description is too scary, I can't understand it!");
+        }
     }
-    
+
+    private Command createDeleteCommand(String taskString) throws GhostException {
+        try {
+            int taskIndex = Integer.parseInt(taskString.trim()) - 1;
+            return new DeleteCommand(taskIndex);
+        } catch (NumberFormatException e) {
+            throw new GhostException("AHHHHHH: Haunted task number must be a valid integer!");
+        }
+    }
+
+    private Command createMarkCommand(String taskString) throws GhostException {
+        try {
+            int taskIndex = Integer.parseInt(taskString.trim()) - 1;
+            return new MarkCommand(taskIndex);
+        } catch (NumberFormatException e) {
+            throw new GhostException("AHHHHHH: Haunted task number must be a valid integer!");
+        }
+    }
+
+    private Command createUnmarkCommand(String taskString) throws GhostException {
+        try {
+            int taskIndex = Integer.parseInt(taskString.trim()) - 1;
+            return new UnmarkCommand(taskIndex);
+        } catch (NumberFormatException e) {
+            throw new GhostException("AHHHHHH: Haunted task number must be a valid integer!");
+        }
+    }
 }

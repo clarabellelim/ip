@@ -41,20 +41,23 @@ public class TaskList {
 
     public void findTasksByDate(LocalDate date) {
         ui.printLine();
-        System.out.println("BOO! Here are the haunted tasks on " + date.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ":");
-        boolean found = false;
+        System.out.println("BOO! Here are the haunted tasks on " +
+                date.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ":");
+
+        boolean isFound = false;
 
         for (Task task : tasks) {
             if (task instanceof Deadline && ((Deadline) task).getDate().equals(date)) {
                 System.out.println("  " + task);
-                found = true;
-            } else if (task instanceof Event && ((Event) task).getFrom().toLocalDate().equals(date)) {
+                isFound = true;
+            } else if (task instanceof Event &&
+                    ((Event) task).getFrom().toLocalDate().equals(date)) {
                 System.out.println("  " + task);
-                found = true;
+                isFound = true;
             }
         }
 
-        if (!found) {
+        if (!isFound) {
             System.out.println(" No haunted tasks found on this date.");
         }
 
@@ -91,7 +94,7 @@ public class TaskList {
         System.out.println(" Now you have " + tasks.size() + " thing(s) to haunt on your haunting list.");
         ui.printLine();
     
-        return removedTask; // Return the removed task
+        return removedTask;
     }
     
     public Task markTask(int taskIndex) throws GhostException {
@@ -107,7 +110,7 @@ public class TaskList {
         System.out.println("   " + task);
         ui.printLine();
     
-        return task; // Return the marked task
+        return task;
     }
     
     public void unmarkTask(int taskIndex) throws GhostException {
@@ -115,7 +118,7 @@ public class TaskList {
             throw new GhostException(" AHHHHHH: Task number is out of haunting range.");
         }
         Task task = tasks.get(taskIndex);
-        task.markAsNotDone(); // Fixed typo
+        task.markAsNotDone();
         storage.saveTasks(tasks);
     
         ui.showUnmarkMessage(task);
