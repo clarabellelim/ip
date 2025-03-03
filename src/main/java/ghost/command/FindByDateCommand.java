@@ -20,7 +20,7 @@ public class FindByDateCommand extends Command {
 
     @Override
     public boolean execute(TaskList tasks, Ui ui, Storage storage) {
-        ui.showTasksByDate(date, tasks.getTasks()); // Calls the new UI method
+        ui.showTasksByDate(date, tasks.getTasks());
         return false;
     }
 }
