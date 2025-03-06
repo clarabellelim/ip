@@ -5,6 +5,7 @@ import ghost.command.Command;
 import ghost.command.DeleteCommand;
 import ghost.command.ExitCommand;
 import ghost.command.FindByDateCommand;
+import ghost.command.FindByKeywordCommand;
 import ghost.command.ListCommand;
 import ghost.command.MarkCommand;
 import ghost.command.UnmarkCommand;
@@ -86,6 +87,11 @@ public class Parser {
                     throw new GhostException("AHHHHHH: Please specify the haunting date in yyyy-MM-dd format.");
                 }
                 return new FindByDateCommand(parts[1].trim());
+            case "find":
+                if (parts.length < 2) {
+                    throw new GhostException("AHHHHHH: Please specify a keyword to search for!");
+                }
+                return new FindByKeywordCommand(parts[1].trim());
             case "todo":
             case "deadline":
             case "event":
