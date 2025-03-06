@@ -36,7 +36,7 @@ public class AddCommand extends Command {
             throw new GhostException("AHHHHHHH: Haunting description cannot be empty.");
         }
 
-        Task task = Task.fromString(input);
+        Task task = Task.fromUserInput(input);
         tasks.addTask(task);
         storage.saveTasks(tasks.getTasks());
         ui.showAddMessage(task, tasks.size());
