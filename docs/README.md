@@ -1,30 +1,41 @@
-# Duke User Guide
+# GhostTask - Manage Your Haunting Tasks 👻
 
-// Update the title above to match the actual product name
+> “I will always be haunting you...” – GhostTask 👻
 
-// Product screenshot goes here
+GhostTask helps you manage your eerie, haunting tasks. With this tool, you'll
+be able to track your tasks with a spooky twist. It’s:
+- **text-based** - perfect for command line lovers 💻
+- **easy to use**  - no haunting knowledge required 🧠
+- **super fast** - haunt tasks in seconds 💨
 
-// Product intro goes here
+### How to Use GhostTask 👻:
+1. Download the latest version from [here](https://github.com/clarabellelim/ip).
+2. Run the JAR file with your terminal.
+3. Add your tasks, such as **Todos**, **Deadlines**, and **Events**.
+4. Let GhostTask manage your haunted list of tasks. 
 
-## Adding deadlines
+#### Features 👻:
+- **Task management**: Add, mark, unmark, delete, and list tasks.
+- **Deadline and Event tracking**: Manage haunted tasks with deadlines and timeframes.
+- **Find by date/keyword**: Filter and search for specific haunted tasks.
 
-// Describe the action and its outcome.
+### Tasks to do 👻:
+- [ ] Integrate reminders (coming soon 🕐)
+- [x] Add deadline functionality
+- [x] Implement task search by keyword
+- [x] Display tasks in a user-friendly format
+> Managing your tasks with GhostTask is like having a friendly ghost by your side. 👻
 
-// Give examples of usage
+Don't let your tasks haunt you. 👻 Use GhostTask to keep them under control! 
+It’s free 🏷️ to use, and you can run it right from your command line.
 
-Example: `keyword (optional arguments)`
+#### Java Usage:
+If you are a Java programmer, you can use it to practice Java too. Here's the `main` method:
 
-// A description of the expected outcome goes here
-
-```
-expected output
-```
-
-## Feature ABC
-
-// Feature details
-
-
-## Feature XYZ
-
-// Feature details
+```java
+public class Main {
+    public static void main(String[] args) {
+        // Launching the GhostTask application
+        Application.launch(MainApp.class, args);
+    }
+}
