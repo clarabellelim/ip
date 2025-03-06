@@ -15,7 +15,7 @@ public class Ui {
     private static final String LINE = "____________________________________________________________";
 
     /**
-     * Constructs a Ui object that reads user input.
+     * Constructs an Ui object that reads user input.
      */
     public Ui() {
         scanner = new Scanner(System.in);
@@ -152,7 +152,7 @@ public class Ui {
      */
     public void showFindMessage(String keyword, ArrayList<Task> matchingTasks) {
         printLine();
-        System.out.println(" BOO! Here are the matching tasks in your haunting list:");
+        System.out.println(" BOO! Here are the matching tasks in your haunting list for keyword: \"" + keyword + "\"");
         int index = 1;
         for (Task task : matchingTasks) {
             System.out.println(index++ + ". " + task);
