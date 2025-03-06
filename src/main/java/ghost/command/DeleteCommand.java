@@ -32,7 +32,6 @@ public class DeleteCommand extends Command {
      */
     @Override
     public boolean execute(TaskList tasks, Ui ui, Storage storage) throws GhostException {
-        // Adjusting the index to 0-based (assuming user provides 1-based index)
         int adjustedIndex = taskIndex - 1;
 
         if (adjustedIndex < 0 || adjustedIndex >= tasks.size()) {

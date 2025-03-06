@@ -103,7 +103,7 @@ public class Parser {
 
     private Command createDeleteCommand(String taskString) throws GhostException {
         try {
-            int taskIndex = Integer.parseInt(taskString.trim()) - 1;
+            int taskIndex = Integer.parseInt(taskString.trim());
             return new DeleteCommand(taskIndex);
         } catch (NumberFormatException e) {
             throw new GhostException("AHHHHHH: Haunted task number must be a valid integer!");
