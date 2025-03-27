@@ -20,6 +20,15 @@ public abstract class Task {
     }
 
     /**
+     * Gets the description of the task.
+     *
+     * @return The description of the task.
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
      * Converts this task to a string for file storage.
      *
      * @return A string representation of the task for file storage.
@@ -36,24 +45,26 @@ public abstract class Task {
     public static Task fromString(String taskString) throws GhostException {
         System.out.println("Parsing task: " + taskString); // Debugging
 
-        if (taskString.startsWith("[T]")) {
-            return new Todo(taskString.substring(6)); // Skip "[T][ ] "
-        } else if (taskString.startsWith("[D]")) {
-            String[] parts = taskString.substring(6).split(" \\(by: ", 2);
+        taskString = taskString.trim();
+
+        if (taskString.startsWith("todo")) {
+            return new Todo(taskString.substring(5).trim());  // Get the description
+        } else if (taskString.startsWith("deadline")) {
+            String[] parts = taskString.substring(9).split(" /by ", 2);  // Split by "/by"
             if (parts.length < 2) {
                 throw new GhostException("Invalid Deadline format: " + taskString);
             }
-            return new Deadline(parts[0], parts[1].replace(")", ""));
-        } else if (taskString.startsWith("[E]")) {
-            String[] parts = taskString.substring(6).split(" \\(from: ", 2);
+            return new Deadline(parts[0].trim(), parts[1].trim());
+        } else if (taskString.startsWith("event")) {
+            String[] parts = taskString.substring(6).split(" /from ", 2);  // Split by "/from"
             if (parts.length < 2) {
                 throw new GhostException("Invalid Event format: " + taskString);
             }
-            String[] timeParts = parts[1].split(" to: ", 2);
+            String[] timeParts = parts[1].split(" /to ", 2);  // Split by "/to"
             if (timeParts.length < 2) {
                 throw new GhostException("Invalid Event format: " + taskString);
             }
-            return new Event(parts[0], timeParts[0], timeParts[1].replace(")", ""));
+            return new Event(parts[0].trim(), timeParts[0].trim(), timeParts[1].trim());
         } else {
             throw new GhostException("AHHHHHHHHH: Unknown type of haunting task: " + taskString);
         }

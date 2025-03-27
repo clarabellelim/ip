@@ -9,63 +9,60 @@ import ghost.task.Task;
 import ghost.ui.Ui;
 
 import java.util.ArrayList;
+import javafx.scene.control.Label;
 
 /**
- * The {@code Ghost} class represents the main chatbot program.
- * It initialises necessary components such as storage, task list, and UI,
- * and runs the main event loop to process user commands.
+ * The {@code Ghost} class represents the core chatbot logic.
+ * It initializes necessary components such as storage, task list, and UI,
+ * and processes user commands.
  */
 public class Ghost {
-    private Storage storage;
+    private final Storage storage;
     private TaskList tasks;
-    private Ui ui;
+    private final Ui ui;
+    private final Parser parser;
 
     /**
      * Constructs a {@code Ghost} chatbot with the specified file path for storage.
      *
      * @param filePath The file path where tasks are stored.
+     * @param responseLabel The label to display responses on the UI.
      */
-    public Ghost(String filePath) {
+    public Ghost(String filePath, Label responseLabel) {
         ui = new Ui();
         storage = new Storage(filePath);
         try {
             ArrayList<Task> tasksList = storage.loadTasks();
             tasks = new TaskList(tasksList, storage, ui);
         } catch (GhostException e) {
-            ui.showLoadingError();
+            ui.showLoadingError(responseLabel);
             tasks = new TaskList(new ArrayList<>(), storage, ui);
         }
+        parser = new Parser(tasks, ui, storage, responseLabel);
     }
 
     /**
-     * Runs the chatbot event loop, handling user input and executing commands
-     * until an exit command is received.
+     * Processes a user command and returns a response.
+     *
+     * @param input The user input command.
+     * @param responseLabel The label to display responses on the UI.
+     * @return The chatbot's response as a string.
      */
-    public void run() {
-        ui.showWelcomeMessage();
-        Parser parser = new Parser(tasks, ui, storage);
-        boolean isExit = false;
-        while (!isExit) {
-            try {
-                String fullCommand = ui.readCommand();
-                ui.printLine(); // Divider line
-                Command command = parser.parse(fullCommand);
-                command.execute(tasks, ui, storage);
-                isExit = command.isExit();
-            } catch (GhostException e) {
-                ui.showError(e.getMessage());
-            } finally {
-                ui.printLine();
-            }
+    public String getResponse(String input, Label responseLabel) {
+        try {
+            Command command = parser.parse(input);
+            return command.execute(tasks, ui, storage, responseLabel) ? "Goodbye! 👋" : ui.getLastResponse();
+        } catch (GhostException e) {
+            return e.getMessage();
         }
     }
 
     /**
-     * The main entry point for the chatbot application.
+     * Getter for the {@code Ui} object.
      *
-     * @param args Command-line arguments (not used).
+     * @return The {@code Ui} object.
      */
-    public static void main(String[] args) {
-        new Ghost("data/tasks.txt").run();
+    public Ui getUi() {
+        return ui;
     }
 }

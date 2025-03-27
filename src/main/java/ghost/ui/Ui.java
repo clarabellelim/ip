@@ -1,190 +1,170 @@
 package ghost.ui;
 
-import ghost.task.Deadline;
-import ghost.task.Event;
 import ghost.task.Task;
-import java.time.LocalDate;
+import javafx.scene.control.Label;
 import java.util.ArrayList;
-import java.util.Scanner;
+
 
 /**
- * Handles user interactions and displays messages.
+ * Handles interactions with the user interface of the Ghost chatbot.
+ * This includes updating the response messages, displaying task-related
+ * information, and managing error messages.
  */
 public class Ui {
-    private final Scanner scanner;
-    private static final String LINE = "____________________________________________________________";
+    private String lastResponse;
 
     /**
-     * Constructs a Ui object that reads user input.
+     * Updates the response label with the given message.
+     *
+     * @param message The message to display on the GUI.
      */
-    public Ui() {
-        scanner = new Scanner(System.in);
+    public void updateResponse(String message) {
+        this.lastResponse = message;
+        System.out.println(message);
     }
 
     /**
-     * Prints a horizontal line separator.
+     * Displays the welcome message in the GUI.
+     * This method sets the welcome message on the given label.
+     *
+     * @param responseLabel The label that displays the welcome message.
      */
-    public void printLine() {
-        System.out.println(LINE);
+    public void showWelcomeMessage(Label responseLabel) {
+        String logo = """
+                ('-. .-.               .-')    .-') _    
+               ( OO )  /              ( OO ). (  OO) )   
+        ,----.    ,--. ,--. .-'),-----. (_)---\\_)/     '._  
+       '  .-./-') |  | |  |( OO'  .-.  '/    _ | |'--...__) 
+       |  |_( OO )|   .|  |/   |  | |  |\\  : . '--.  .--' 
+       |  | .--, \\|       |\\_) |  |\\|  | '..''.)   |  |    
+      (|  | '. (_/|  .-.  |  \\ |  | |  |.-._)   \\   |  |    
+       |  '--'  | |  | |  |   '  '-'  '\\       /   |  |    
+        ------'  --' --'     -----'  -----'    --'    
+        """;
+        responseLabel.setText("BOO! Hello I am\n" + logo + "\nHow may I haunt you?");
     }
 
     /**
-     * Displays the welcome message when the program starts.
+     * Displays the goodbye message in the GUI.
+     * This message is shown when the user exits the program.
+     *
+     * @param responseLabel The label that displays the exit message.
      */
-    public void showWelcomeMessage() {
-        String logo = "             ('-. .-.               .-')    .-') _    \n"
-                + "            ( OO )  /              ( OO ). (  OO) )   \n"
-                + "  ,----.    ,--. ,--. .-'),-----. (_)---\\_)/     '._  \n"
-                + " '  .-./-') |  | |  |( OO'  .-.  '/    _ | |'--...__) \n"
-                + " |  |_( OO )|   .|  |/   |  | |  |\\  :` `. '--.  .--' \n"
-                + " |  | .--, \\|       |\\_) |  |\\|  | '..`''.)   |  |    \n"
-                + "(|  | '. (_/|  .-.  |  \\ |  | |  |.-._)   \\   |  |    \n"
-                + " |  '--'  | |  | |  |   `'  '-'  '\\       /   |  |    \n"
-                + "  `------'  `--' `--'     `-----'  `-----'    `--'    \n";
-        System.out.println("BOO! Hello I am\n" + logo + "\nHow may I haunt you?");
-        printLine();
-    }
-
-    /**
-     * Displays the exit message when the program ends.
-     */
-    public void showExitMessage() {
-        String byebye = ".-. .-')                 ('-.  ,---. \n"
-                + "\\  ( OO )              _(  OO) |   | \n"
-                + " ;-----.\\  ,--.   ,--.(,------.|   | \n"
-                + " | .-.  |   \\  `.'  /  |  .---'|   | \n"
-                + " | '-' /_).-')     /   |  |    |   | \n"
-                + " | .-. `.(OO  \\   /   (|  '--. |  .' \n"
-                + " | |  \\  ||   /  /\\_   |  .--' `--'  \n"
-                + " | '--'  /`-./  /.__)  |  `---..--.  \n"
-                + " `------'   `--'       `------''--'  \n";
-        printLine();
-        System.out.println(" AHHHHH! The ghost is vanishing...\n");
+    public void showExitMessage(Label responseLabel) {
+        String byebye = """
+                .-. .-')                 ('-.  ,---. 
+               \\  ( OO )              _(  OO) |   | 
+                ;-----.\\  ,--.   ,--.(,------.|   | 
+                 | .-.  |   \\  .'  /  |  .---'|   | 
+                 | '-' /_).-')     /   |  |    |   | 
+                 | .-. .(OO  \\   /   (|  '--. |  .' 
+                 | |  \\  ||   /  /\\_   |  .--' --'  
+                 | '--'  /-./  /.__)  |  ---..--.  
+                 ------'   --'       ------''--'  
+        """;
+        System.out.println("AHHHHH! The ghost is vanishing...\n");
         System.out.println(byebye + "\nI will always be haunting you...");
-        printLine();
+        responseLabel.setText("BOO! The ghost is vanishing... Goodbye!");
     }
 
     /**
-     * Displays a message when a task is deleted.
+     * Displays the loading error message when failing to load tasks.
      *
-     * @param removedTask The task that was removed.
-     * @param taskSize The number of remaining tasks.
+     * @param responseLabel The label to display the error message.
      */
-    public void showDeleteMessage(Task removedTask, int taskSize) {
-        printLine();
-        System.out.println(" BOO! I've removed this haunting item:");
-        System.out.println("   " + removedTask);
-        System.out.println(" Now you have " + taskSize + " thing(s) to haunt on your haunting list.");
-        printLine();
+    public void showLoadingError(Label responseLabel) {
+        String errorMessage = "BOO! Failed to load haunting tasks.";
+        responseLabel.setText(errorMessage);
+        System.out.println(errorMessage);
     }
 
     /**
-     * Displays a message when a task is marked as completed.
+     * Gets the last response message stored.
      *
-     * @param task The task that was marked.
+     * @return The last response message.
      */
-    public void showMarkMessage(Task task) {
-        printLine();
-        System.out.println(" BOO! I've marked this task as haunted:");
-        System.out.println("   " + task);
-        printLine();
+    public String getLastResponse() {
+        return lastResponse;
     }
 
     /**
-     * Displays a message when a task is unmarked as completed.
-     *
-     * @param task The task that was unmarked.
-     */
-    public void showUnmarkMessage(Task task) {
-        printLine();
-        System.out.println(" BOO! I've unmarked this task for haunting:");
-        System.out.println("   " + task);
-        printLine();
-    }
-
-    /**
-     * Displays a message when a new task is added.
-     *
-     * @param task The task that was added.
-     * @param taskSize The updated number of tasks.
-     */
-    public void showAddMessage(Task task, int taskSize) {
-        printLine();
-        System.out.println(" New haunting item added. MUAHAHAHAHAHA:");
-        System.out.println("  " + task);
-        System.out.println(" Now you have " + taskSize + " thing(s) to haunt on your haunting list.");
-        printLine();
-    }
-
-    /**
-     * Displays tasks that are scheduled for a given date.
-     *
-     * @param date The date to filter tasks by.
-     * @param tasks The list of tasks to check.
-     */
-    public void showTasksByDate(LocalDate date, ArrayList<Task> tasks) {
-        printLine();
-        System.out.println(" BOO! Here are the tasks to haunt on " + date + ":");
-        
-        for (Task task : tasks) {
-            if (task instanceof Deadline) {
-                Deadline deadline = (Deadline) task;
-                if (deadline.getDate().equals(date)) {
-                    System.out.println("   " + task);
-                }
-            } else if (task instanceof Event) {
-                Event event = (Event) task;
-                if (!event.getFrom().toLocalDate().isAfter(date)
-                        && !event.getTo().toLocalDate().isBefore(date)) {
-                    System.out.println("   " + task);
-                }
-            }
-        }
-        
-        printLine();
-    }
-
-    /**
-     * Displays the tasks that match the given search keyword.
-     *
-     * @param keyword The keyword used for searching tasks.
-     * @param matchingTasks The list of tasks that match the search keyword.
-     */
-    public void showFindMessage(String keyword, ArrayList<Task> matchingTasks) {
-        printLine();
-        System.out.println(" BOO! Here are the matching tasks in your haunting list:");
-        int index = 1;
-        for (Task task : matchingTasks) {
-            System.out.println(index++ + ". " + task);
-        }
-        printLine();
-    }
-
-    /**
-     * Reads and returns the next user command.
-     *
-     * @return The user's command as a string.
-     */
-    public String readCommand() {
-        return scanner.nextLine();
-    }
-
-    /**
-     * Displays an error message.
+     * Displays an error message in the GUI.
      *
      * @param message The error message to display.
+     * @param responseLabel The label to display the error message.
      */
-    public void showError(String message) {
-        printLine();
-        System.out.println(message);
-        printLine();
+    public void showError(String message, Label responseLabel) {
+        responseLabel.setText("Error: " + message);
+        System.out.println("Error: " + message);
     }
 
     /**
-     * Displays a message when loading tasks from storage fails.
+     * Displays the delete message in the GUI.
+     *
+     * @param task The task that was deleted.
+     * @param taskCount The number of remaining tasks.
+     * @param responseLabel The label to display the delete message.
      */
-    public void showLoadingError() {
-        System.out.println("BOO! Failed to load haunting tasks.");
+    public void showDeleteMessage(Task task, int taskCount, Label responseLabel) {
+        String message = "Deleted task: " + task.getDescription() + ". You now have " + taskCount + " tasks left.";
+        responseLabel.setText(message);
+        System.out.println(message);
+    }
+
+    /**
+     * Displays the unmark message in the GUI.
+     *
+     * @param task The task that was unmarked.
+     * @param responseLabel The label to display the unmark message.
+     */
+    public void showUnmarkMessage(Task task, Label responseLabel) {
+        String message = "Task unmarked: " + task.getDescription();
+        responseLabel.setText(message);
+        System.out.println(message);
+    }
+
+    /**
+     * Displays the add message in the GUI.
+     *
+     * @param task The task that was added.
+     * @param taskCount The number of tasks after the new addition.
+     * @param responseLabel The label to display the add message.
+     */
+    public void showAddMessage(Task task, int taskCount, Label responseLabel) {
+        String message = "Added task: " + task.getDescription() + ". You now have " + taskCount + " tasks.";
+        responseLabel.setText(message);
+        System.out.println(message);
+    }
+
+    /**
+     * Displays the mark message in the GUI.
+     *
+     * @param task The task that was marked.
+     * @param responseLabel The label to display the mark message.
+     */
+    public void showMarkMessage(Task task, Label responseLabel) {
+        String message = "Task marked as done: " + task.getDescription();
+        responseLabel.setText(message);
+        System.out.println(message);
+    }
+
+    /**
+     * Displays the tasks that match the specified keyword.
+     *
+     * @param keyword The keyword used to search for tasks.
+     * @param tasks   The list of matching tasks.
+     * @param responseLabel The label to display the result on the UI.
+     */
+    public void showFindMessage(String keyword, ArrayList<Task> tasks, Label responseLabel) {
+        StringBuilder response = new StringBuilder();
+        response.append("BOO! Here are the haunted tasks matching the keyword '")
+                .append(keyword).append("':\n");
+
+        for (Task task : tasks) {
+            response.append("  ").append(task).append("\n");
+        }
+
+        responseLabel.setText(response.toString());
     }
 
 }

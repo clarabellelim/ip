@@ -5,6 +5,8 @@ import ghost.task.TaskList;
 import ghost.ui.Ui;
 import ghost.exception.GhostException;
 
+import javafx.scene.control.Label;
+
 /**
  * Represents an abstract command that can be executed in the chatbot.
  */
@@ -15,10 +17,11 @@ public abstract class Command {
      * @param tasks   The task list.
      * @param ui      The user interface.
      * @param storage The storage for saving tasks.
+     * @param responseLabel The label to display the response on the UI.
      * @return {@code true} if the command exits the program, otherwise {@code false}.
      * @throws GhostException If an error occurs during execution.
      */
-    public abstract boolean execute(TaskList tasks, Ui ui, Storage storage) throws GhostException;
+    public abstract boolean execute(TaskList tasks, Ui ui, Storage storage, Label responseLabel) throws GhostException;
 
     /**
      * Returns whether this command should cause the chatbot to exit.

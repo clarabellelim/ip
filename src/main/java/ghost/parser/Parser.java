@@ -1,17 +1,12 @@
 package ghost.parser;
 
-import ghost.command.AddCommand;
-import ghost.command.Command;
-import ghost.command.DeleteCommand;
-import ghost.command.ExitCommand;
-import ghost.command.FindByDateCommand;
-import ghost.command.ListCommand;
-import ghost.command.MarkCommand;
-import ghost.command.UnmarkCommand;
+import ghost.command.*;
 import ghost.exception.GhostException;
 import ghost.storage.Storage;
 import ghost.task.TaskList;
 import ghost.ui.Ui;
+
+import javafx.scene.control.Label;
 
 /**
  * Handles parsing of user input and execution of commands.
@@ -20,6 +15,7 @@ public class Parser {
     private final TaskList tasks;
     private final Ui ui;
     private final Storage storage;
+    private final Label responseLabel;
 
     /**
      * Constructs a Parser with the necessary components.
@@ -27,11 +23,13 @@ public class Parser {
      * @param tasks The task list.
      * @param ui The user interface.
      * @param storage The storage handler.
+     * @param responseLabel The label to display responses on the UI.
      */
-    public Parser(TaskList tasks, Ui ui, Storage storage) {
+    public Parser(TaskList tasks, Ui ui, Storage storage, Label responseLabel) {
         this.tasks = tasks;
         this.ui = ui;
         this.storage = storage;
+        this.responseLabel = responseLabel;
     }
 
     /**
@@ -43,9 +41,9 @@ public class Parser {
     public boolean handleCommand(String input) {
         try {
             Command command = parse(input);
-            return command.execute(tasks, ui, storage);
+            return command.execute(tasks, ui, storage, responseLabel);
         } catch (GhostException e) {
-            ui.showError(e.getMessage());
+            ui.showError(e.getMessage(), responseLabel);
         }
         return false;
     }
@@ -63,7 +61,7 @@ public class Parser {
 
         switch (commandWord) {
             case "bye":
-                return new ExitCommand();
+                return new ExitCommand(responseLabel);
             case "list":
                 return new ListCommand();
             case "delete":
@@ -81,15 +79,31 @@ public class Parser {
                     throw new GhostException("AHHHHHH: Please specify a haunted task number to unmark!");
                 }
                 return createUnmarkCommand(parts[1]);
+            case "find":
+                if (parts.length < 2) {
+                    throw new GhostException("AHHHHHH: Please specify a keyword to search for.");
+                }
+                return new FindByKeywordCommand(parts[1].trim());
             case "finddate":
                 if (parts.length < 2) {
                     throw new GhostException("AHHHHHH: Please specify the haunting date in yyyy-MM-dd format.");
                 }
                 return new FindByDateCommand(parts[1].trim());
             case "todo":
+                if (parts.length < 2) {
+                    throw new GhostException("AHHHHHH: Please specify a task description!");
+                }
+                return new AddCommand("todo " + parts[1].trim()); // Ensure correct format for AddCommand
             case "deadline":
+                if (parts.length < 2 || !parts[1].contains("/by")) {
+                    throw new GhostException("AHHHHHH: Please specify the deadline in the format /by yyyy/MM/dd!");
+                }
+                return new AddCommand("deadline " + parts[1].trim()); // Ensure correct format for AddCommand
             case "event":
-                return new AddCommand(input);
+                if (parts.length < 2 || !parts[1].contains("/from") || !parts[1].contains("/to")) {
+                    throw new GhostException("AHHHHHH: Please specify the event in the format /from yyyy/MM/dd HH:mm /to yyyy/MM/dd HH:mm!");
+                }
+                return new AddCommand("event " + parts[1].trim()); // Ensure correct format for AddCommand
             default:
                 throw new GhostException("AHHHHHH: The description is too scary, I can't understand it!");
         }
