@@ -42,7 +42,7 @@ test {
 }
 
 application {
-    mainClass = 'ghost.Main'
+    mainClass.set("ghost.Main")
 }
 
 jar {

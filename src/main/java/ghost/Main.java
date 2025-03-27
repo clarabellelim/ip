@@ -1,68 +1,95 @@
 package ghost;
 
-import ghost.command.Command;
-import ghost.exception.GhostException;
-import ghost.parser.Parser;
-import ghost.storage.Storage;
-import ghost.task.Task;
-import ghost.task.TaskList;
-import ghost.ui.Ui;
-
-import java.util.ArrayList;
+import ghost.command.ExitCommand;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.geometry.Pos;
 
 /**
- * The main class for the Ghost application.
- * This class initializes the core components and runs the main event loop.
+ * The JavaFX GUI for the Ghost chatbot.
+ * This class handles the initialization of the application window,
+ * user input handling, and displaying responses in the UI.
  */
-public class Main {
-    private final Storage storage;
-    private TaskList tasks;
-    private final Ui ui;
-    private final Parser parser;  // Parser instance
+public class Main extends Application {
+    private Label responseLabel;  // Declare the responseLabel field
+    private Ghost ghost;  // Declare Ghost field
 
     /**
-     * Initializes the Ghost application, setting up UI, storage, and task management.
+     * Starts the JavaFX application window.
+     * Sets up the layout, input fields, and button actions.
      *
-     * @param filePath The file path for storing task data.
+     * @param stage The primary stage for this JavaFX application.
      */
-    public Main(String filePath) {
-        ui = new Ui();
-        storage = new Storage(filePath);
-        try {
-            ArrayList<Task> loadedTasks = storage.loadTasks();
-            tasks = new TaskList(loadedTasks, storage, ui);
-        } catch (GhostException e) {
-            ui.showError("Failed to load haunting tasks. Starting with an empty list...");
-            tasks = new TaskList(new ArrayList<>(), storage, ui);
-        }
+    @Override
+    public void start(Stage stage) {
+        VBox layout = new VBox(10);
+        layout.setAlignment(Pos.TOP_CENTER);  // Center align the content
 
-        parser = new Parser(tasks, ui, storage);
+        // Create a label to display responses
+        responseLabel = new Label("Welcome to Ghost! 👻");
+        responseLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #000000; -fx-alignment: center;");
+
+        // Initialize the Ghost object, passing the responseLabel to the constructor
+        ghost = new Ghost("data/tasks.txt", responseLabel);
+
+        // Show welcome message when the application starts
+        ghost.getUi().showWelcomeMessage(responseLabel);
+
+        // Create a ScrollPane to allow the responseLabel to scroll
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(responseLabel);
+        scrollPane.setFitToWidth(true);  // Ensure label fits the scroll pane width
+
+        // TextField for user input
+        TextField inputField = new TextField();
+        inputField.setPromptText("Enter your task here...");
+
+        // Extracted method for creating the send button
+        Button sendButton = createSendButton(inputField);
+
+        // Create the ExitCommand and handle window close event
+        ExitCommand exitCommand = new ExitCommand(responseLabel);
+        stage.setOnCloseRequest(event -> exitCommand.execute(
+                null, ghost.getUi(), null, responseLabel)); // Execute exit command on window close
+
+        // Add components to layout
+        layout.getChildren().addAll(scrollPane, inputField, sendButton);
+
+        // Set up the scene and stage
+        Scene scene = new Scene(layout, 400, 300);
+        stage.setTitle("Ghost Task Manager");
+        stage.setScene(scene);
+        stage.show();
     }
 
     /**
-     * Runs the Ghost application.
+     * Creates the send button to handle user input and updates the response label.
+     *
+     * @param inputField The input field where users enter their commands.
+     * @return The send button.
      */
-    public void run() {
-        ui.showWelcomeMessage();
-
-        boolean isExit = false;
-        while (!isExit) {
-            try {
-                String input = ui.readCommand();
-                Command command = parser.parse(input);  // Use the instance of Parser
-                isExit = command.execute(tasks, ui, storage);
-            } catch (GhostException e) {
-                ui.showError(e.getMessage());
-            }
-        }
+    private Button createSendButton(TextField inputField) {
+        Button sendButton = new Button("Send");
+        sendButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");  // Green background with white text
+        sendButton.setOnAction(e -> {
+            String userInput = inputField.getText(); // Get user input
+            String response = ghost.getResponse(userInput, responseLabel); // Get response from Ghost
+            responseLabel.setText(response); // Update the response in the label
+            inputField.clear(); // Clear input field for next command
+        });
+        return sendButton;
     }
 
     /**
-     * The main entry point of the application.
-     *
-     * @param args Command-line arguments.
+     * Launch the application.
      */
     public static void main(String[] args) {
-        new Ghost("data/ghost.txt").run();
+        launch(args);
     }
 }
