@@ -6,7 +6,15 @@ import ghost.exception.GhostException;
  * Represents an abstract task with a description and completion status.
  */
 public abstract class Task {
+
+    /**
+     * The description of the task, representing what needs to be done.
+     */
     protected String description;
+
+    /**
+     * The completion status of the task. True if the task is completed, false if it is not.
+     */
     protected boolean isDone;
 
     /**

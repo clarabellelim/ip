@@ -87,7 +87,12 @@ public class Main extends Application {
     }
 
     /**
-     * Launch the application.
+     * Launches the GhostTask application.
+     * <p>
+     * This is the entry point for running the application from the command line.
+     * </p>
+     *
+     * @param args The command-line arguments (not used in this application).
      */
     public static void main(String[] args) {
         launch(args);
