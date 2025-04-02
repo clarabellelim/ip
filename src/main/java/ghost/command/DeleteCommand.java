@@ -45,9 +45,7 @@ public class DeleteCommand extends Command {
         storage.saveTasks(tasks.getTasks());
 
         // Use Platform.runLater to update the GUI
-        Platform.runLater(() -> {
-            ui.showDeleteMessage(taskToDelete, tasks.size(), responseLabel);
-        });
+        Platform.runLater(() -> ui.showDeleteMessage(taskToDelete, tasks.size(), responseLabel));
 
         return false;
     }
