@@ -43,9 +43,7 @@ public class FindByDateCommand extends Command {
     @Override
     public boolean execute(TaskList tasks, Ui ui, Storage storage, Label responseLabel) {
         // Ensure UI update happens on the JavaFX Application Thread.
-        Platform.runLater(() -> {
-            tasks.findTasksByDate(date, responseLabel);
-        });
+        Platform.runLater(() -> tasks.findTasksByDate(date, responseLabel));
         return false;
     }
 }
