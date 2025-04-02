@@ -59,54 +59,59 @@ public class Parser {
         String[] parts = input.split(" ", 2);
         String commandWord = parts[0].toLowerCase();
 
-        switch (commandWord) {
-            case "bye":
-                return new ExitCommand(responseLabel);
-            case "list":
-                return new ListCommand();
-            case "delete":
+        return switch (commandWord) {
+            case "bye" -> new ExitCommand(responseLabel);
+            case "list" -> new ListCommand();
+            case "delete" -> {
                 if (parts.length < 2) {
                     throw new GhostException("AHHHHHH: Please specify a haunted task number to delete!");
                 }
-                return createDeleteCommand(parts[1]);
-            case "mark":
+                yield createDeleteCommand(parts[1]);
+            }
+            case "mark" -> {
                 if (parts.length < 2) {
                     throw new GhostException("AHHHHHH: Please specify a haunted task number to mark!");
                 }
-                return createMarkCommand(parts[1]);
-            case "unmark":
+                yield createMarkCommand(parts[1]);
+            }
+            case "unmark" -> {
                 if (parts.length < 2) {
                     throw new GhostException("AHHHHHH: Please specify a haunted task number to unmark!");
                 }
-                return createUnmarkCommand(parts[1]);
-            case "find":
+                yield createUnmarkCommand(parts[1]);
+            }
+            case "find" -> {
                 if (parts.length < 2) {
                     throw new GhostException("AHHHHHH: Please specify a keyword to search for.");
                 }
-                return new FindByKeywordCommand(parts[1].trim());
-            case "finddate":
+                yield new FindByKeywordCommand(parts[1].trim());
+            }
+            case "finddate" -> {
                 if (parts.length < 2) {
                     throw new GhostException("AHHHHHH: Please specify the haunting date in yyyy-MM-dd format.");
                 }
-                return new FindByDateCommand(parts[1].trim());
-            case "todo":
+                yield new FindByDateCommand(parts[1].trim());
+            }
+            case "todo" -> {
                 if (parts.length < 2) {
                     throw new GhostException("AHHHHHH: Please specify a task description!");
                 }
-                return new AddCommand("todo " + parts[1].trim()); // Ensure correct format for AddCommand
-            case "deadline":
+                yield new AddCommand("todo " + parts[1].trim());
+            }
+            case "deadline" -> {
                 if (parts.length < 2 || !parts[1].contains("/by")) {
                     throw new GhostException("AHHHHHH: Please specify the deadline in the format /by yyyy/MM/dd!");
                 }
-                return new AddCommand("deadline " + parts[1].trim()); // Ensure correct format for AddCommand
-            case "event":
+                yield new AddCommand("deadline " + parts[1].trim());
+            }
+            case "event" -> {
                 if (parts.length < 2 || !parts[1].contains("/from") || !parts[1].contains("/to")) {
                     throw new GhostException("AHHHHHH: Please specify the event in the format /from yyyy/MM/dd HH:mm /to yyyy/MM/dd HH:mm!");
                 }
-                return new AddCommand("event " + parts[1].trim()); // Ensure correct format for AddCommand
-            default:
-                throw new GhostException("AHHHHHH: The description is too scary, I can't understand it!");
-        }
+                yield new AddCommand("event " + parts[1].trim());
+            }
+            default -> throw new GhostException("AHHHHHH: The description is too scary, I can't understand it!");
+        };
     }
 
     private Command createDeleteCommand(String taskString) throws GhostException {
