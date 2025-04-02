@@ -47,7 +47,7 @@ application {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'ghost.Main'
+        attributes 'Main-Class': 'ghost.Launcher'
     }
 }
 
